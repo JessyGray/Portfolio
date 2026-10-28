@@ -104,15 +104,21 @@
 
     /* numbers */
 
-    $$('[data-count]').forEach((el) => {
-        const obj = { v: 0 };
-        el.textContent = '0';
-        gsap.to(obj, {
-            v: Number(el.dataset.count),
-            duration: 1.6,
-            ease: 'power3.out',
-            onUpdate: () => (el.textContent = Math.round(obj.v)),
-            scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+    const counters = $$('[data-count]');
+    counters.forEach((el) => (el.textContent = '0'));
+
+    // wait for the intro, otherwise the numbers finish counting behind it
+    Promise.resolve(site.ready).then(() => {
+        counters.forEach((el) => {
+            const obj = { v: 0 };
+            gsap.to(obj, {
+                v: Number(el.dataset.count),
+                duration: 2,
+                delay: 0.2,
+                ease: 'power2.out',
+                onUpdate: () => (el.textContent = Math.round(obj.v)),
+                scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+            });
         });
     });
 
