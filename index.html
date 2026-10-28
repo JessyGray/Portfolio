@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jessy Gray | CV</title>
+    <meta name="description" content="Jessy Gray, junior system administrator and full stack developer based in Haifa. Experience, skills and projects.">
+    <meta name="theme-color" content="#0c0c0d">
+    <meta property="og:title" content="Jessy Gray | CV">
+    <meta property="og:description" content="System administrator and full stack developer based in Haifa.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+
+    <script>
+        (function () {
+            var saved = null;
+            try { saved = localStorage.getItem('theme'); } catch (e) {}
+            var theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+            if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.classList.add('motion');
+                try {
+                    if (!sessionStorage.getItem('intro-seen')) document.documentElement.classList.add('intro');
+                } catch (e) {}
+            }
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="preloader" aria-hidden="true">
+        <div class="preloader__inner">
+            <span class="preloader__name">Jessy Gray</span>
+            <span class="preloader__count"><span data-preloader-count>0</span>%</span>
+        </div>
+        <div class="preloader__bar"><span></span></div>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a href="index.html" class="logo">Jessy Gray</a>
+
+            <nav class="nav" aria-label="Primary">
+                <ul class="nav__list">
+                    <li><a href="#about" class="nav__link">About</a></li>
+                    <li><a href="#experience" class="nav__link">Experience</a></li>
+                    <li><a href="#projects" class="nav__link">Projects</a></li>
+                    <li><a href="#skills" class="nav__link">Skills</a></li>
+                    <li><a href="#contact" class="nav__link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="site-header__actions">
+                <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch color theme">
+                    <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                    <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+                    <span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <nav aria-label="Mobile">
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main id="main">
+
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container">
+                <p class="hero__meta" data-hero>Haifa, Israel <span aria-hidden="true">·</span> <span class="status"><span class="status__dot"></span>Open to work</span></p>
+
+                <h1 class="hero__title" id="hero-title">
+                    <span class="line"><span data-hero-line>Jessy Gray</span></span>
+                </h1>
+                <p class="hero__role" data-hero>Junior System Administrator and Full Stack Developer</p>
+
+                <div class="hero__bottom" data-hero>
+                    <p class="hero__lead">
+                        Five years in IT support and infrastructure. Now I build websites and web apps:
+                        a restaurant site in Moscow, a booking platform for a detailing studio and an
+                        inventory system for an auto parts workshop.
+                    </p>
+                    <div class="hero__cta">
+                        <a href="projects.html" class="btn btn--accent" data-magnetic>
+                            <span>See projects</span>
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </a>
+                        <button type="button" class="btn btn--ghost" data-print data-magnetic>Download CV</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="marquee" aria-hidden="true">
+            <div class="marquee__track">
+                <span>Next.js</span><i></i><span>React</span><i></i><span>TypeScript</span><i></i><span>Supabase</span><i></i><span>GSAP</span><i></i><span>Tailwind CSS</span><i></i><span>Windows Server</span><i></i><span>Linux</span><i></i><span>Active Directory</span><i></i><span>Networking</span><i></i>
+                <span>Next.js</span><i></i><span>React</span><i></i><span>TypeScript</span><i></i><span>Supabase</span><i></i><span>GSAP</span><i></i><span>Tailwind CSS</span><i></i><span>Windows Server</span><i></i><span>Linux</span><i></i><span>Active Directory</span><i></i><span>Networking</span><i></i>
+            </div>
+        </div>
+
+        <section class="section" id="about" aria-labelledby="about-title">
+            <div class="container section__grid">
+                <h2 class="section__title" id="about-title" data-split>About</h2>
+
+                <div class="section__body">
+                    <div class="about__text" data-reveal>
+                        <p class="big-text">
+                            I started out fixing printers and resetting passwords. Later I ran Active Directory,
+                            virtual machines and backups for a company of a few hundred people.
+                        </p>
+                        <p>
+                            Working with infrastructure taught me to care about the things nobody notices
+                            until they break. I bring the same habit to front end work: clear structure,
+                            predictable behaviour and pages that keep working.
+                        </p>
+                        <p>
+                            I have a B.Sc. in Electronic Engineering and I'm currently in the Full Stack
+                            Development program at Tel-Ran.
+                        </p>
+                    </div>
+
+                    <dl class="facts" data-reveal>
+                        <div><dt>Years in IT</dt><dd><span data-count="5">5</span>+</dd></div>
+                        <div><dt>Languages</dt><dd><span data-count="5">5</span></dd></div>
+                        <div><dt>Countries worked in</dt><dd><span data-count="3">3</span></dd></div>
+                        <div><dt>Live projects</dt><dd><span data-count="3">3</span></dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="experience" aria-labelledby="experience-title">
+            <div class="container section__grid">
+                <h2 class="section__title" id="experience-title" data-split>Experience</h2>
+
+                <ol class="timeline section__body">
+                    <li class="timeline__rail" aria-hidden="true"><span class="timeline__progress"></span></li>
+
+                    <li class="job" data-reveal>
+                        <p class="job__when mono">Mar 2023 - Sep 2025</p>
+                        <h3 class="job__role">Junior System Administrator</h3>
+                        <p class="job__company">Mir Vkusa MMC, Moscow</p>
+                        <ul class="job__list">
+                            <li>Administered and monitored Windows Server 2016/2019 and Linux (Ubuntu, CentOS) systems.</li>
+                            <li>Configured and troubleshot LAN/WAN equipment: routers, switches and firewalls.</li>
+                            <li>Managed Active Directory users, groups, OU structure and Group Policy.</li>
+                            <li>Ran regular backups and restore tests to reduce downtime.</li>
+                            <li>Deployed and maintained virtual machines in VMware and Hyper-V.</li>
+                        </ul>
+                    </li>
+
+                    <li class="job" data-reveal>
+                        <p class="job__when mono">Jun 2020 - Oct 2020</p>
+                        <h3 class="job__role">IT Support and Infrastructure Assistant</h3>
+                        <p class="job__company">SKY Agency, Muğla</p>
+                        <ul class="job__list">
+                            <li>Set up workstations, operating systems and software for staff.</li>
+                            <li>Helped the marketing team fix Google Analytics and AdSense tracking issues.</li>
+                            <li>Checked connectivity, router settings and access permissions.</li>
+                        </ul>
+                    </li>
+
+                    <li class="job" data-reveal>
+                        <p class="job__when mono">May 2019 - Jun 2020</p>
+                        <h3 class="job__role">IT Support Technician</h3>
+                        <p class="job__company">SKY Agency, Muğla</p>
+                        <ul class="job__list">
+                            <li>Installed and maintained computers, printers and network equipment.</li>
+                            <li>Created accounts, reset passwords and managed access.</li>
+                            <li>Fixed hosting and CMS issues to keep the company website online.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section work" id="projects" aria-labelledby="projects-title">
+            <div class="container">
+                <div class="work__head">
+                    <h2 class="section__title" id="projects-title" data-split>Projects</h2>
+                    <a href="projects.html" class="link-arrow">
+                        All projects
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </a>
+                </div>
+
+                <div class="project-grid project-grid--featured" data-featured></div>
+            </div>
+        </section>
+
+        <section class="section" id="skills" aria-labelledby="skills-title">
+            <div class="container section__grid">
+                <h2 class="section__title" id="skills-title" data-split>Skills</h2>
+
+                <div class="section__body skills">
+                    <div class="skills__group" data-reveal>
+                        <h3 class="skills__title">Development</h3>
+                        <ul class="chips">
+                            <li>HTML</li>
+                            <li>CSS</li>
+                            <li>JavaScript</li>
+                            <li>TypeScript</li>
+                            <li>React</li>
+                            <li>Next.js</li>
+                            <li>Tailwind CSS</li>
+                            <li>GSAP</li>
+                            <li>Supabase</li>
+                            <li>Git and GitHub</li>
+                            <li>Vercel</li>
+                        </ul>
+                    </div>
+
+                    <div class="skills__group" data-reveal>
+                        <h3 class="skills__title">Infrastructure</h3>
+                        <ul class="chips">
+                            <li>Windows Server</li>
+                            <li>Linux</li>
+                            <li>Active Directory</li>
+                            <li>Networking</li>
+                            <li>VMware / Hyper-V</li>
+                            <li>Backup and recovery</li>
+                        </ul>
+                    </div>
+
+                    <div class="skills__group" data-reveal>
+                        <h3 class="skills__title">Support</h3>
+                        <ul class="chips">
+                            <li>Troubleshooting</li>
+                            <li>Hardware and software</li>
+                            <li>Microsoft 365</li>
+                            <li>Helpdesk</li>
+                            <li>Python basics</li>
+                        </ul>
+                    </div>
+
+                    <div class="skills__group" data-reveal>
+                        <h3 class="skills__title">Languages</h3>
+                        <ul class="langs">
+                            <li class="lang"><span>Azerbaijani</span><span class="lang__bar" style="--level: 1"></span><span class="mono">Native</span></li>
+                            <li class="lang"><span>Turkish</span><span class="lang__bar" style="--level: .95"></span><span class="mono">C2</span></li>
+                            <li class="lang"><span>Russian</span><span class="lang__bar" style="--level: .82"></span><span class="mono">C1</span></li>
+                            <li class="lang"><span>English</span><span class="lang__bar" style="--level: .55"></span><span class="mono">B1</span></li>
+                            <li class="lang"><span>Hebrew</span><span class="lang__bar" style="--level: .3"></span><span class="mono">A2</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="education" aria-labelledby="education-title">
+            <div class="container section__grid">
+                <h2 class="section__title" id="education-title" data-split>Education</h2>
+
+                <ul class="rows section__body">
+                    <li class="row" data-reveal>
+                        <span class="row__year mono">2026 - 2027</span>
+                        <div>
+                            <h3 class="row__title">Full Stack Development Program</h3>
+                            <p class="row__sub">Tel-Ran Computing Solutions LTD, in progress</p>
+                        </div>
+                    </li>
+                    <li class="row" data-reveal>
+                        <span class="row__year mono">2016 - 2023</span>
+                        <div>
+                            <h3 class="row__title">B.Sc. in Electronic Engineering</h3>
+                            <p class="row__sub">Sumgait State University</p>
+                        </div>
+                    </li>
+                    <li class="row" data-reveal>
+                        <span class="row__year mono">Certificate</span>
+                        <div>
+                            <h3 class="row__title">Technical Support and IT Infrastructure Basics</h3>
+                            <p class="row__sub">Barama Innovation Center</p>
+                        </div>
+                    </li>
+                    <li class="row" data-reveal>
+                        <span class="row__year mono">Certificate</span>
+                        <div>
+                            <h3 class="row__title">Network Essentials (CCNA level fundamentals)</h3>
+                            <p class="row__sub">Code Academy Azerbaijan</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section contact" id="contact" aria-labelledby="contact-title">
+            <div class="container section__grid">
+                <h2 class="section__title" id="contact-title" data-split>Contact</h2>
+
+                <div class="section__body">
+                    <p class="contact__lead" data-reveal>
+                        Looking for a junior developer or IT support role. The fastest way to reach me is email.
+                    </p>
+
+                    <div class="contact__actions" data-reveal>
+                        <a href="mailto:jessy_gray@icloud.com" class="contact__mail" data-magnetic>jessy_gray@icloud.com</a>
+                        <button type="button" class="btn btn--ghost btn--small" data-copy="jessy_gray@icloud.com">Copy</button>
+                    </div>
+
+                    <dl class="contact__info" data-reveal>
+                        <div>
+                            <dt>Phone</dt>
+                            <dd><a href="tel:+972557740855">+972 55 774 0855</a></dd>
+                        </div>
+                        <div>
+                            <dt>Location</dt>
+                            <dd>Haifa, Israel</dd>
+                        </div>
+                        <div>
+                            <dt>Driving licence</dt>
+                            <dd>B, C</dd>
+                        </div>
+                        <div>
+                            <dt>Online</dt>
+                            <dd>
+                                <a href="https://github.com/JessyGray" target="_blank" rel="noopener">GitHub</a>,
+                                <a href="https://www.instagram.com/jessygray.co/" target="_blank" rel="noopener">Instagram</a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p>&copy; <span data-year>2026</span> Jessy Gray</p>
+            <a href="#main" class="to-top">Back to top</a>
+        </div>
+    </footer>
+
+    <div class="toast" role="status" aria-live="polite"></div>
+
+    <script src="data/projects.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/motion.js"></script>
+</body>
+
+</html>

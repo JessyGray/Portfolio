@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Jessy Gray</title>
+    <meta name="description" content="Websites and web apps by Jessy Gray.">
+    <meta name="theme-color" content="#0c0c0d">
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+
+    <script>
+        (function () {
+            var saved = null;
+            try { saved = localStorage.getItem('theme'); } catch (e) {}
+            var theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+            if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.classList.add('motion');
+            }
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/projects.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a href="index.html" class="logo">Jessy Gray</a>
+
+            <nav class="nav" aria-label="Primary">
+                <ul class="nav__list">
+                    <li><a href="index.html#about" class="nav__link">About</a></li>
+                    <li><a href="index.html#experience" class="nav__link">Experience</a></li>
+                    <li><a href="projects.html" class="nav__link is-active" aria-current="page">Projects</a></li>
+                    <li><a href="index.html#skills" class="nav__link">Skills</a></li>
+                    <li><a href="index.html#contact" class="nav__link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="site-header__actions">
+                <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch color theme">
+                    <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                    <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+                    <span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <nav aria-label="Mobile">
+            <ul>
+                <li><a href="index.html">CV</a></li>
+                <li><a href="index.html#experience">Experience</a></li>
+                <li><a href="projects.html" aria-current="page">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main id="main">
+        <section class="page-hero" aria-labelledby="page-title">
+            <div class="container">
+                <h1 class="page-hero__title" id="page-title">
+                    <span class="line"><span data-hero-line>Projects <span class="page-hero__count mono" data-project-count></span></span></span>
+                </h1>
+                <p class="page-hero__lead" data-hero>
+                    Websites and web apps I've built for real businesses, plus a few side projects.
+                </p>
+            </div>
+        </section>
+
+        <section class="section section--tight" aria-label="Project list">
+            <div class="container">
+                <div class="toolbar" data-hero>
+                    <div class="filters" role="group" aria-label="Filter projects" data-filters></div>
+                    <label class="search">
+                        <span class="visually-hidden">Search projects</span>
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                        <input type="search" placeholder="Search" data-search autocomplete="off">
+                    </label>
+                </div>
+
+                <div class="project-grid" data-projects-grid aria-live="polite"></div>
+
+                <p class="empty-state" data-empty hidden>
+                    No projects found. <button type="button" class="link-btn" data-reset>Clear filters</button>
+                </p>
+            </div>
+        </section>
+
+        <section class="section cta" aria-labelledby="cta-title">
+            <div class="container cta__inner">
+                <h2 class="cta__title" id="cta-title" data-split>Want to work together?</h2>
+                <div class="cta__actions">
+                    <a href="mailto:jessy_gray@icloud.com" class="btn btn--accent" data-magnetic><span>Email me</span></a>
+                    <a href="https://github.com/JessyGray" class="btn btn--ghost" target="_blank" rel="noopener" data-magnetic>GitHub</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p>&copy; <span data-year>2026</span> Jessy Gray</p>
+            <a href="#main" class="to-top">Back to top</a>
+        </div>
+    </footer>
+
+    <dialog class="modal" data-modal aria-labelledby="modal-title">
+        <div class="modal__panel">
+            <button type="button" class="icon-btn modal__close" data-modal-close aria-label="Close">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="modal__media" data-modal-media></div>
+            <div class="modal__body">
+                <p class="modal__meta mono" data-modal-meta></p>
+                <h2 class="modal__title" id="modal-title" data-modal-title></h2>
+                <p class="modal__text" data-modal-text></p>
+                <ul class="tags" data-modal-tags></ul>
+                <div class="modal__links" data-modal-links></div>
+            </div>
+        </div>
+    </dialog>
+
+    <div class="toast" role="status" aria-live="polite"></div>
+
+    <script src="data/projects.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/motion.js"></script>
+</body>
+
+</html>
