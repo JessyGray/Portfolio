@@ -248,3 +248,34 @@
         min-height: 220px;
     }
 }
+
+.modal__text {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.modal__text h3 {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--fg);
+}
+
+.modal__note {
+    flex-basis: 100%;
+    font-size: 0.88rem;
+    color: var(--fg-3);
+}
+
+.modal--no-media .modal__panel {
+    grid-template-columns: 1fr;
+}
+
+.modal--no-media .modal__media {
+    display: none;
+}
+
+.modal--no-media {
+    width: min(640px, calc(100% - 2rem));
+}

@@ -328,3 +328,25 @@
         transform: none;
     }
 }
+
+/* card without screenshot */
+
+.card__media--empty {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    background:
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px,
+        var(--surface);
+}
+
+.card__placeholder {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+}

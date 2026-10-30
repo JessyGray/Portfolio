@@ -17,7 +17,11 @@
     function mediaHTML(p) {
         return p.cover
             ? `<div class="card__media"><img src="${esc(p.cover)}" alt="" loading="lazy" decoding="async"><span class="card__arrow" aria-hidden="true">${arrowIcon}</span></div>`
-            : `<div class="card__media card__media--empty"><span>${esc(p.title)}</span></div>`;
+            : `<div class="card__media card__media--empty">
+                    <span class="card__placeholder">${esc(p.title)}</span>
+                    <ul class="tags">${(p.tags || []).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+                    <span class="card__arrow" aria-hidden="true">${arrowIcon}</span>
+               </div>`;
     }
 
     function cardHTML(p, linkMode) {
@@ -30,7 +34,7 @@
                 ${mediaHTML(p)}
                 <div class="card__info">
                     <h3 class="card__title">${opener}</h3>
-                    <span class="card__type">${esc(p.type || p.year)}</span>
+                    <span class="card__type">${esc(p.status || p.type || p.year)}</span>
                     <p class="card__summary">${esc(p.summary)}</p>
                 </div>
             </article>`;
@@ -170,13 +174,20 @@
         $('[data-modal-media]', modal).innerHTML = p.cover
             ? `<img src="${esc(p.cover)}" alt="Screenshot of ${esc(p.title)}">`
             : '';
-        $('[data-modal-meta]', modal).textContent = [p.type, p.year].filter(Boolean).join(', ');
+        modal.classList.toggle('modal--no-media', !p.cover);
+        $('[data-modal-meta]', modal).textContent = [p.type, p.status, p.year].filter(Boolean).join(', ');
         $('[data-modal-title]', modal).textContent = p.title;
-        $('[data-modal-text]', modal).textContent = p.description || p.summary;
+        $('[data-modal-text]', modal).innerHTML = [
+            `<p>${esc(p.summary)}</p>`,
+            p.problem ? `<h3>Problem and solution</h3><p>${esc(p.problem)}</p>` : '',
+            p.role ? `<h3>My role</h3><p>${esc(p.role)}</p>` : '',
+            '<h3>Stack</h3>'
+        ].join('');
         $('[data-modal-tags]', modal).innerHTML = (p.tags || []).map((t) => `<li>${esc(t)}</li>`).join('');
         $('[data-modal-links]', modal).innerHTML = [
             p.live ? linkButton(p.live, 'Open site', true) : '',
-            p.repo ? linkButton(p.repo, 'Code on GitHub', !p.live) : ''
+            p.repo ? linkButton(p.repo, 'Code on GitHub', !p.live) : '',
+            p.note ? `<p class="modal__note">${esc(p.note)}</p>` : ''
         ].join('');
 
         modal.showModal();

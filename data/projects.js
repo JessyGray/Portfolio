@@ -4,10 +4,13 @@
   id          unique slug, used in the URL (projects.html?project=id)
   category    filters the project belongs to
   summary     one line on the card
-  description longer text in the details window
-  cover       screenshot path
+  problem     what the client needed and how the project solves it
+  role        what I did on the project
+  status      optional, e.g. 'In development'
+  cover       screenshot path (leave empty if there is none yet)
   live, repo  links (leave empty if there is none)
-  featured    true = also shown on the CV page
+  note        optional line under the links
+  featured    true = also shown on the CV page (first three)
 */
 
 const PROJECTS = [
@@ -18,7 +21,8 @@ const PROJECTS = [
         year: 2026,
         category: ['Web App', 'Next.js'],
         summary: 'Car detailing studio site with online booking and an admin panel.',
-        description: 'Bilingual site (Hebrew and English, RTL) for a detailing studio in Tel Aviv. The hero car gets cleaner as you scroll. Eight services with starting prices, a four-step booking form (vehicle, services, date and time, details) with a live price estimate based on vehicle size, WhatsApp confirmation and a studio admin area on Supabase.',
+        problem: 'The studio took bookings by phone and WhatsApp, so prices and free time slots were explained again for every client. The site shows all services with starting prices and has a four-step booking form that estimates the price from the vehicle size. Requests land in an admin panel and are confirmed on WhatsApp.',
+        role: 'Design, frontend, database and deploy.',
         cover: 'assets/img/projects/noir-gloss.jpg',
         tags: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Supabase'],
         live: 'https://noir-gloss.vercel.app',
@@ -32,11 +36,13 @@ const PROJECTS = [
         year: 2026,
         category: ['Website'],
         summary: 'Website for a restaurant in Moscow: menu, banquets, delivery and cart.',
-        description: 'Live site for a restaurant in Moscow. Menu in fifteen categories, a banquet page for events up to 180 guests with a request form, delivery and payment info, a cart, call and WhatsApp buttons, and a light and dark theme.',
+        problem: 'Guests had no single place to see the menu, order delivery or ask about banquets. The site has the full menu in fifteen categories, a cart, a banquet page for events up to 180 guests with a request form, and call and WhatsApp buttons.',
+        role: 'Built together with a partner.',
         cover: 'assets/img/projects/izdvorik.jpg',
         tags: ['HTML', 'CSS', 'JavaScript'],
         live: 'https://izdvorik.ru',
         repo: '',
+        note: "Code in a partner's private repository.",
         featured: true
     },
     {
@@ -46,25 +52,43 @@ const PROJECTS = [
         year: 2026,
         category: ['Web App'],
         summary: 'Stock and sales system for an auto parts workshop, synced to the cloud.',
-        description: 'Hebrew RTL web app for a parts workshop. Sales with cart, discounts and several payment methods, parts inventory with categories, shelf locations and low stock alerts, stock counts with CSV export, a movement log and cloud backup and restore. Data syncs between computer and phone through Supabase.',
+        problem: 'The workshop tracked parts on paper and in spreadsheets, so stock was often wrong and nobody knew what was running out. The app handles sales, inventory with shelf locations, low stock alerts and stock counts, and keeps the same data on the computer and the phone through Supabase.',
+        role: 'Design, frontend, database and deploy.',
         cover: 'assets/img/projects/workshop-app.jpg',
-        tags: ['JavaScript', 'Supabase', 'PostgreSQL', 'Vercel'],
+        tags: ['JavaScript', 'Supabase', 'SQL', 'Vercel'],
         live: 'https://auto-parts-workshop.vercel.app',
         repo: 'https://github.com/JessyGray/AutoPartsWorkshop',
         featured: true
     },
     {
-        id: 'date-app',
-        title: 'Date App',
-        type: 'Small side project',
+        id: 'orvekta',
+        title: 'Orvekta',
+        type: 'AI product',
+        status: 'In development',
+        year: 2026,
+        category: ['AI / Automation'],
+        summary: 'AI system that helps restaurants manage Yandex Direct ads with daily reports and suggestions.',
+        problem: 'Restaurant owners pay for ads but rarely have time to read the numbers. Orvekta collects ad and analytics data every day and sends a short report with concrete suggestions.',
+        role: 'Founder and developer.',
+        cover: '',
+        tags: ['n8n', 'Yandex Direct API', 'Yandex Metrica API', 'Claude API'],
+        live: '',
+        repo: '',
+        featured: false
+    },
+    {
+        id: 'linkedin-autopost',
+        title: 'LinkedIn Autopost',
+        type: 'Side project',
         year: 2026,
         category: ['Side project'],
-        summary: 'Invitation page where the "Not now" button runs away from the cursor.',
-        description: 'One page invitation. On desktop the "Not now" button escapes the cursor, on mobile it stays put. After "yes" the visitor picks a date, time and place, and the answer is sent to Telegram through the Bot API.',
-        cover: 'assets/img/projects/date-app.jpg',
-        tags: ['HTML', 'CSS', 'JavaScript', 'Telegram Bot API'],
-        live: '',
-        repo: 'https://github.com/JessyGray/DateApp',
+        summary: 'Scheduler that publishes my LinkedIn posts automatically.',
+        problem: 'Posts wait in a Supabase table and a Vercel cron job sends the ones that are due to the LinkedIn API, so I can write a week of posts at once.',
+        role: 'Built alone.',
+        cover: '',
+        tags: ['Node.js', 'Supabase', 'Postgres', 'LinkedIn OAuth 2.0', 'Vercel Cron'],
+        live: 'https://jessy-linkedin-autopost.vercel.app',
+        repo: '',
         featured: false
     }
 ];
