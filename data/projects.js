@@ -70,7 +70,7 @@ const PROJECTS = [
         summary: 'AI system that helps restaurants manage Yandex Direct ads with daily reports and suggestions.',
         problem: 'Restaurant owners pay for ads but rarely have time to read the numbers. Orvekta collects ad and analytics data every day and sends a short report with concrete suggestions.',
         role: 'Founder and developer.',
-        cover: '',
+        cover: 'assets/img/projects/orvekta.jpg',
         tags: ['n8n', 'Yandex Direct API', 'Yandex Metrica API', 'Claude API'],
         live: '',
         repo: '',
