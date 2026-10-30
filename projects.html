@@ -131,17 +131,33 @@
     </footer>
 
     <dialog class="modal" data-modal aria-labelledby="modal-title">
-        <div class="modal__panel">
-            <button type="button" class="icon-btn modal__close" data-modal-close aria-label="Close">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-            </button>
-            <div class="modal__media" data-modal-media></div>
+        <div class="modal__panel" data-modal-panel data-lenis-prevent>
+            <div class="modal__bar">
+                <span class="modal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="modal__url mono" data-modal-url></span>
+                <div class="modal__nav">
+                    <button type="button" class="icon-btn" data-modal-prev aria-label="Previous project">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <button type="button" class="icon-btn" data-modal-next aria-label="Next project">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                    <button type="button" class="icon-btn" data-modal-close aria-label="Close">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <figure class="modal__media" data-modal-media></figure>
+
             <div class="modal__body">
-                <p class="modal__meta mono" data-modal-meta></p>
-                <h2 class="modal__title" id="modal-title" data-modal-title></h2>
-                <div class="modal__text" data-modal-text></div>
-                <ul class="tags" data-modal-tags></ul>
-                <div class="modal__links" data-modal-links></div>
+                <div class="modal__intro">
+                    <p class="modal__meta mono" data-modal-meta></p>
+                    <h2 class="modal__title" id="modal-title" data-modal-title></h2>
+                    <p class="modal__summary" data-modal-summary></p>
+                    <div class="modal__links" data-modal-links></div>
+                </div>
+                <div class="modal__details" data-modal-details></div>
             </div>
         </div>
     </dialog>

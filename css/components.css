@@ -151,11 +151,15 @@
 }
 
 .card__media {
-    aspect-ratio: 16 / 11;
+    aspect-ratio: 36 / 25;
     border-radius: var(--radius-m);
     overflow: hidden;
     background: var(--surface);
     border: 1px solid var(--line);
+}
+
+.card__media {
+    transition: transform var(--dur-slow) var(--ease-out), border-color var(--dur) ease, box-shadow var(--dur-slow) var(--ease-out);
 }
 
 .card__media img {
@@ -163,11 +167,12 @@
     height: 100%;
     object-fit: cover;
     object-position: top center;
-    transition: transform 0.8s var(--ease-out);
 }
 
-.card:hover .card__media img {
-    transform: scale(1.03);
+.card:hover .card__media {
+    transform: translateY(-6px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow);
 }
 
 .card__media--empty {

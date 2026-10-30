@@ -166,36 +166,77 @@
                 </a>`;
     }
 
-    function openProject(id, trigger) {
-        const p = projects.find((item) => item.id === id);
-        if (!p) return;
-        lastTrigger = trigger || null;
+    const panel = $('[data-modal-panel]', modal);
+    let currentId = null;
 
+    function visibleIds() {
+        return cards.filter((c) => c.style.display !== 'none').map((c) => c.dataset.id);
+    }
+
+    function hostOf(url) {
+        if (!/^https?:\/\//.test(url || '')) return '';
+        return new URL(url).host.replace(/^www\./, '');
+    }
+
+    function section(title, html) {
+        return `<section><h3>${title}</h3>${html}</section>`;
+    }
+
+    function fillProject(p) {
+        currentId = p.id;
+
+        $('[data-modal-url]', modal).textContent = hostOf(p.live) || p.title;
         $('[data-modal-media]', modal).innerHTML = p.cover
-            ? `<img src="${esc(p.cover)}" alt="Screenshot of ${esc(p.title)}">`
+            ? `<img src="${esc(p.cover)}" alt="Screenshot of ${esc(p.title)}" width="1440" height="1000">`
             : '';
         modal.classList.toggle('modal--no-media', !p.cover);
+
         $('[data-modal-meta]', modal).textContent = [p.type, p.status, p.year].filter(Boolean).join(', ');
         $('[data-modal-title]', modal).textContent = p.title;
-        $('[data-modal-text]', modal).innerHTML = [
-            `<p>${esc(p.summary)}</p>`,
-            p.problem ? `<h3>Problem and solution</h3><p>${esc(p.problem)}</p>` : '',
-            p.role ? `<h3>My role</h3><p>${esc(p.role)}</p>` : '',
-            '<h3>Stack</h3>'
-        ].join('');
-        $('[data-modal-tags]', modal).innerHTML = (p.tags || []).map((t) => `<li>${esc(t)}</li>`).join('');
+        $('[data-modal-summary]', modal).textContent = p.summary;
         $('[data-modal-links]', modal).innerHTML = [
             p.live ? linkButton(p.live, 'Open site', true) : '',
             p.repo ? linkButton(p.repo, 'Code on GitHub', !p.live) : '',
             p.note ? `<p class="modal__note">${esc(p.note)}</p>` : ''
         ].join('');
 
-        modal.showModal();
-        if (site.lenis) site.lenis.stop();
+        $('[data-modal-details]', modal).innerHTML = [
+            p.problem ? section('Problem and solution', `<p>${esc(p.problem)}</p>`) : '',
+            p.role ? section('My role', `<p>${esc(p.role)}</p>`) : '',
+            section('Stack', `<ul class="tags">${(p.tags || []).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`)
+        ].join('');
+
+        const ids = visibleIds();
+        const single = ids.length < 2;
+        $('[data-modal-prev]', modal).hidden = single;
+        $('[data-modal-next]', modal).hidden = single;
+
+        panel.scrollTop = 0;
 
         const url = new URL(location.href);
-        url.searchParams.set('project', id);
+        url.searchParams.set('project', p.id);
         history.replaceState(null, '', url);
+    }
+
+    function openProject(id, trigger) {
+        const p = projects.find((item) => item.id === id);
+        if (!p) return;
+        lastTrigger = trigger || null;
+        fillProject(p);
+        modal.showModal();
+        if (site.lenis) site.lenis.stop();
+    }
+
+    function step(dir) {
+        const ids = visibleIds();
+        if (ids.length < 2) return;
+        const i = ids.indexOf(currentId);
+        const next = projects.find((p) => p.id === ids[(i + dir + ids.length) % ids.length]);
+        modal.classList.remove('modal--switching');
+        void modal.offsetWidth;
+        modal.classList.add('modal--switching');
+        fillProject(next);
+        lastTrigger = $(`.card[data-id="${next.id}"] .card__open`, grid);
     }
 
     grid.addEventListener('click', (e) => {
@@ -204,6 +245,13 @@
     });
 
     $('[data-modal-close]', modal).addEventListener('click', () => modal.close());
+    $('[data-modal-prev]', modal).addEventListener('click', () => step(-1));
+    $('[data-modal-next]', modal).addEventListener('click', () => step(1));
+
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') step(-1);
+        if (e.key === 'ArrowRight') step(1);
+    });
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.close();
