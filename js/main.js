@@ -2,290 +2,194 @@
     'use strict';
 
     const root = document.documentElement;
+    const $ = (selector, context = document) => context.querySelector(selector);
+    const $$ = (selector, context = document) => Array.from(context.querySelectorAll(selector));
     const hasGsap = typeof window.gsap !== 'undefined';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const site = (window.site = { reduceMotion, lenis: null, ready: Promise.resolve() });
 
-    if (!hasGsap) root.classList.remove('motion');
-
-    const site = (window.site = { reduceMotion, lenis: null });
-
-    const $ = (sel, ctx = document) => ctx.querySelector(sel);
-    const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-
-    /* theme */
+    root.classList.remove('intro');
+    if (!hasGsap || reduceMotion) root.classList.remove('motion');
+    $('.preloader')?.remove();
+    $('.cursor')?.remove();
 
     const themeBtn = $('[data-theme-toggle]');
     const themeMeta = $('meta[name="theme-color"]');
 
     function applyTheme(theme) {
         root.setAttribute('data-theme', theme);
-        if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#0c0c0d' : '#f3f1ec');
+        if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#171b19' : '#f5f3ee');
+        if (themeBtn) themeBtn.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
     }
 
-    applyTheme(root.getAttribute('data-theme') || 'dark');
-
-    if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-            const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-            try { localStorage.setItem('theme', next); } catch (e) { /* private mode */ }
-        });
-    }
-
-    /* smooth scroll */
+    applyTheme(root.getAttribute('data-theme') || 'light');
+    themeBtn?.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+        try { localStorage.setItem('theme', next); } catch (error) { /* Storage can be disabled. */ }
+    });
 
     if (typeof window.Lenis !== 'undefined' && !reduceMotion) {
-        const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+        const lenis = new Lenis({ duration: 0.8, smoothWheel: true });
         site.lenis = lenis;
-
         if (hasGsap) {
             gsap.ticker.add((time) => lenis.raf(time * 1000));
             gsap.ticker.lagSmoothing(0);
         } else {
-            const raf = (time) => {
+            const frame = (time) => {
                 lenis.raf(time);
-                requestAnimationFrame(raf);
+                requestAnimationFrame(frame);
             };
-            requestAnimationFrame(raf);
+            requestAnimationFrame(frame);
         }
     }
-
-    function scrollToTarget(target) {
-        const offset = -(parseInt(getComputedStyle(root).getPropertyValue('--header-h'), 10) || 72);
-        if (site.lenis) {
-            site.lenis.scrollTo(target, { offset });
-        } else {
-            const top = target === 0 ? 0 : target.getBoundingClientRect().top + window.scrollY + offset;
-            window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
-        }
-    }
-
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a[href^="#"]');
-        if (!link) return;
-        const id = link.getAttribute('href');
-        if (id === '#') return;
-        const target = id === '#main' ? 0 : $(id);
-        if (target === null) return;
-        e.preventDefault();
-        closeMenu();
-        scrollToTarget(target);
-        if (target !== 0) history.replaceState(null, '', id);
-    });
-
-    /* header */
 
     const header = $('.site-header');
     const progress = $('.scroll-progress span');
-    let lastY = window.scrollY;
-    let ticking = false;
+    let scrollScheduled = false;
 
-    function onScroll() {
-        const y = window.scrollY;
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        header.classList.toggle('is-scrolled', y > 10);
-        header.classList.toggle('is-hidden', y > lastY && y > 400 && !document.body.classList.contains('menu-open'));
-        if (progress) progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
-        lastY = y;
-        ticking = false;
+    function updateScroll() {
+        const max = root.scrollHeight - window.innerHeight;
+        header?.classList.toggle('is-scrolled', window.scrollY > 16);
+        if (progress) progress.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+        scrollScheduled = false;
     }
 
-    if (header) {
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(onScroll);
-                ticking = true;
-            }
-        }, { passive: true });
-        onScroll();
-    }
-
-    /* mobile menu */
+    window.addEventListener('scroll', () => {
+        if (!scrollScheduled) {
+            requestAnimationFrame(updateScroll);
+            scrollScheduled = true;
+        }
+    }, { passive: true });
+    window.addEventListener('resize', updateScroll, { passive: true });
+    updateScroll();
 
     const menuBtn = $('.menu-btn');
     const menu = $('#mobile-menu');
+    const background = $$('main, body > footer');
+    const inertState = new Map();
+    let menuAnimation = null;
 
-    function openMenu() {
-        menu.hidden = false;
-        menuBtn.setAttribute('aria-expanded', 'true');
-        menuBtn.setAttribute('aria-label', 'Close menu');
-        document.body.classList.add('menu-open');
-        if (site.lenis) site.lenis.stop();
-
-        if (hasGsap && !reduceMotion) {
-            gsap.fromTo(menu, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.7, ease: 'expo.out' });
-            gsap.from($$('li', menu), { yPercent: 60, opacity: 0, duration: 0.6, stagger: 0.05, delay: 0.15, ease: 'expo.out' });
-        }
-    }
-
-    function closeMenu() {
+    function closeMenu(restoreFocus = true) {
         if (!menu || menu.hidden) return;
+        menuAnimation?.kill();
         menu.hidden = true;
         menuBtn.setAttribute('aria-expanded', 'false');
         menuBtn.setAttribute('aria-label', 'Open menu');
         document.body.classList.remove('menu-open');
-        if (site.lenis) site.lenis.start();
+        background.forEach((element) => { element.inert = inertState.get(element) || false; });
+        inertState.clear();
+        site.lenis?.start();
+        if (restoreFocus) menuBtn.focus({ preventScroll: true });
+    }
+
+    function openMenu() {
+        if (!menu || !menuBtn) return;
+        menu.hidden = false;
+        menuBtn.setAttribute('aria-expanded', 'true');
+        menuBtn.setAttribute('aria-label', 'Close menu');
+        document.body.classList.add('menu-open');
+        background.forEach((element) => {
+            inertState.set(element, element.inert);
+            element.inert = true;
+        });
+        site.lenis?.stop();
+        if (hasGsap && !reduceMotion) {
+            menuAnimation?.kill();
+            menuAnimation = gsap.fromTo($$('a', menu),
+                { y: 18, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.35, stagger: 0.04, ease: 'power2.out', clearProps: 'transform,opacity' });
+        }
+        $('a', menu)?.focus({ preventScroll: true });
     }
 
     if (menuBtn && menu) {
-        menuBtn.addEventListener('click', () => (menu.hidden ? openMenu() : closeMenu()));
-        $$('a', menu).forEach((a) => a.addEventListener('click', closeMenu));
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !menu.hidden) {
+        menuBtn.addEventListener('click', () => menu.hidden ? openMenu() : closeMenu());
+        $$('a', menu).forEach((link) => link.addEventListener('click', () => closeMenu(false)));
+        document.addEventListener('keydown', (event) => {
+            if (menu.hidden) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
                 closeMenu();
-                menuBtn.focus();
+                return;
             }
+            if (event.key !== 'Tab') return;
+            const controls = [menuBtn, ...$$('a[href], button:not([disabled])', menu)];
+            const current = controls.indexOf(document.activeElement);
+            const next = (current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
+            event.preventDefault();
+            controls[next].focus();
         });
-        window.matchMedia('(min-width: 901px)').addEventListener('change', (e) => e.matches && closeMenu());
+        window.matchMedia('(min-width: 761px)').addEventListener('change', (event) => {
+            if (event.matches) closeMenu(false);
+        });
     }
 
-    /* active section in nav */
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('a[href^="#"]');
+        if (!link) return;
+        const hash = link.getAttribute('href');
+        if (hash === '#') return;
+        let target;
+        try { target = $(hash); } catch (error) { return; }
+        if (!target) return;
+        event.preventDefault();
+        closeMenu(false);
+        const offset = -(parseInt(getComputedStyle(root).getPropertyValue('--header-h'), 10) || 80);
+        if (site.lenis) site.lenis.scrollTo(target, { offset });
+        else window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY + offset,
+            behavior: reduceMotion ? 'instant' : 'smooth'
+        });
+        history.replaceState(null, '', hash);
+        const needsTabIndex = !target.hasAttribute('tabindex');
+        if (needsTabIndex) target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: true });
+        if (needsTabIndex) target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+    });
 
     const navLinks = $$('.nav__link[href^="#"]');
     if (navLinks.length && 'IntersectionObserver' in window) {
-        const map = new Map();
+        const sections = new Map();
         navLinks.forEach((link) => {
             const section = $(link.getAttribute('href'));
-            if (section) map.set(section, link);
+            if (section) sections.set(section, link);
         });
-
-        const io = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (!entry.isIntersecting) return;
-                navLinks.forEach((l) => l.classList.remove('is-active'));
-                map.get(entry.target).classList.add('is-active');
+                navLinks.forEach((link) => {
+                    link.classList.remove('is-active');
+                    link.removeAttribute('aria-current');
+                });
+                const current = sections.get(entry.target);
+                current.classList.add('is-active');
+                current.setAttribute('aria-current', 'location');
             });
-        }, { rootMargin: '-45% 0px -50% 0px' });
-
-        map.forEach((_, section) => io.observe(section));
+        }, { rootMargin: '-25% 0px -60% 0px' });
+        sections.forEach((link, section) => observer.observe(section));
     }
 
-    /* misc */
-
-    $$('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));
-
+    $$('[data-year]').forEach((element) => { element.textContent = new Date().getFullYear(); });
     const toast = $('.toast');
     let toastTimer;
-    site.toast = function (msg) {
+    site.toast = (message) => {
         if (!toast) return;
-        toast.textContent = msg;
+        toast.textContent = message;
         toast.classList.add('is-visible');
         clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2000);
+        toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
     };
 
-    $$('[data-copy]').forEach((btn) => {
-        btn.addEventListener('click', async () => {
-            const text = btn.dataset.copy;
+    $$('[data-copy]').forEach((button) => {
+        button.addEventListener('click', async () => {
             try {
-                await navigator.clipboard.writeText(text);
-                site.toast('Copied');
-            } catch (e) {
-                window.location.href = `mailto:${text}`;
+                await navigator.clipboard.writeText(button.dataset.copy);
+                site.toast('Email copied');
+            } catch (error) {
+                site.toast('Copy unavailable. Select the email address to copy it.');
             }
         });
     });
-
-    $$('[data-print]').forEach((btn) => btn.addEventListener('click', () => window.print()));
-
-    /* cursor */
-
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const cursor = $('.cursor');
-
-    if (cursor && finePointer && !reduceMotion) {
-        const label = $('.cursor__label', cursor);
-        const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        const mouse = { x: pos.x, y: pos.y };
-
-        window.addEventListener('pointermove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            cursor.classList.add('is-visible');
-        }, { passive: true });
-
-        document.addEventListener('pointerleave', () => cursor.classList.remove('is-visible'));
-
-        (function loop() {
-            pos.x += (mouse.x - pos.x) * 0.18;
-            pos.y += (mouse.y - pos.y) * 0.18;
-            cursor.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-            requestAnimationFrame(loop);
-        })();
-
-        document.addEventListener('pointerover', (e) => {
-            const labelled = e.target.closest('[data-cursor]');
-            const interactive = e.target.closest('a, button, input, label');
-
-            if (labelled) {
-                label.textContent = labelled.dataset.cursor;
-                cursor.classList.add('has-label');
-                cursor.classList.remove('is-hover');
-            } else {
-                cursor.classList.remove('has-label');
-                cursor.classList.toggle('is-hover', !!interactive);
-            }
-        });
-    } else if (cursor) {
-        cursor.remove();
-    }
-
-    /* magnetic buttons */
-
-    if (finePointer && !reduceMotion && hasGsap) {
-        $$('[data-magnetic]').forEach((el) => {
-            const xTo = gsap.quickTo(el, 'x', { duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-            const yTo = gsap.quickTo(el, 'y', { duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-
-            el.addEventListener('pointermove', (e) => {
-                const r = el.getBoundingClientRect();
-                xTo((e.clientX - r.left - r.width / 2) * 0.3);
-                yTo((e.clientY - r.top - r.height / 2) * 0.4);
-            });
-            el.addEventListener('pointerleave', () => {
-                xTo(0);
-                yTo(0);
-            });
-        });
-    }
-
-    /* preloader, once per session */
-
-    site.ready = new Promise((resolve) => {
-        const loader = $('.preloader');
-
-        if (!loader || !hasGsap || !root.classList.contains('intro')) {
-            root.classList.remove('intro');
-            if (loader) loader.remove();
-            resolve();
-            return;
-        }
-
-        if (site.lenis) site.lenis.stop();
-
-        const counter = $('[data-preloader-count]', loader);
-        const state = { v: 0 };
-
-        const finish = () => {
-            loader.remove();
-            root.classList.remove('intro');
-            try { sessionStorage.setItem('intro-seen', '1'); } catch (e) { /* ignore */ }
-            if (site.lenis) site.lenis.start();
-        };
-
-        gsap.timeline({ onComplete: finish })
-            .to(state, {
-                v: 100,
-                duration: 1.4,
-                ease: 'power2.inOut',
-                onUpdate: () => (counter.textContent = Math.round(state.v))
-            })
-            .to($('.preloader__bar span', loader), { scaleX: 1, duration: 1.4, ease: 'power2.inOut' }, 0)
-            .to(loader, {
-                clipPath: 'inset(0 0 100% 0)',
-                duration: 0.9,
-                ease: 'expo.inOut',
-                onStart: resolve
-            }, '+=0.15');
-    });
+    $$('[data-print]').forEach((button) => button.addEventListener('click', () => window.print()));
 })();

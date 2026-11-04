@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -12,24 +12,20 @@
     <meta property="og:url" content="https://jessygray.vercel.app/projects.html">
     <meta property="og:image" content="https://jessygray.vercel.app/assets/og.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#0c0c0d">
+    <meta name="theme-color" content="#f5f3ee">
     <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
 
     <script>
         (function () {
-            var saved = null;
-            try { saved = localStorage.getItem('theme'); } catch (e) {}
-            var theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            var theme = 'light';
+            try { var saved = localStorage.getItem('theme'); if (saved === 'dark' || saved === 'light') theme = saved; } catch (e) {}
             document.documentElement.setAttribute('data-theme', theme);
-            if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.documentElement.classList.add('motion');
-            }
         })();
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -41,7 +37,6 @@
     <a class="skip-link" href="#main">Skip to content</a>
 
     <div class="scroll-progress" aria-hidden="true"><span></span></div>
-    <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
 
     <header class="site-header">
         <div class="container site-header__inner">
@@ -84,11 +79,12 @@
     <main id="main">
         <section class="page-hero" aria-labelledby="page-title">
             <div class="container">
+                <p class="eyebrow" data-hero>Selected projects / 2026</p>
                 <h1 class="page-hero__title" id="page-title">
-                    <span class="line"><span data-hero-line>Projects <span class="page-hero__count mono" data-project-count></span></span></span>
+                    <span class="line"><span data-hero-line>The work<span class="page-hero__count mono" data-project-count></span></span></span>
                 </h1>
                 <p class="page-hero__lead" data-hero>
-                    Websites and web apps I've built for real businesses, an AI product in development and a side project.
+                    Client websites, practical web apps and a few things I’m building next.
                 </p>
             </div>
         </section>
@@ -116,8 +112,8 @@
             <div class="container cta__inner">
                 <h2 class="cta__title" id="cta-title" data-split>Want to work together?</h2>
                 <div class="cta__actions">
-                    <a href="mailto:jessy_gray@icloud.com" class="btn btn--accent" data-magnetic><span>Email me</span></a>
-                    <a href="https://github.com/JessyGray" class="btn btn--ghost" target="_blank" rel="noopener" data-magnetic>GitHub</a>
+                    <a href="mailto:jessy_gray@icloud.com" class="btn btn--accent"><span>Email me</span></a>
+                    <a href="https://github.com/JessyGray" class="btn btn--ghost" target="_blank" rel="noopener">GitHub</a>
                 </div>
             </div>
         </section>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jessy Gray | Full Stack Developer</title>
     <meta name="description" content="Jessy Gray, aspiring full stack developer in Haifa. Websites and web apps for real businesses, built with JavaScript, Next.js and Supabase.">
-    <meta name="theme-color" content="#0c0c0d">
+    <meta name="theme-color" content="#f5f3ee">
     <meta property="og:title" content="Jessy Gray | Full Stack Developer">
     <meta property="og:description" content="Websites and web apps for real businesses: a restaurant, a detailing studio and an auto parts workshop.">
     <meta property="og:type" content="website">
@@ -19,22 +19,15 @@
 
     <script>
         (function () {
-            var saved = null;
-            try { saved = localStorage.getItem('theme'); } catch (e) {}
-            var theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            var theme = 'light';
+            try { var saved = localStorage.getItem('theme'); if (saved === 'dark' || saved === 'light') theme = saved; } catch (e) {}
             document.documentElement.setAttribute('data-theme', theme);
-            if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.documentElement.classList.add('motion');
-                try {
-                    if (!sessionStorage.getItem('intro-seen')) document.documentElement.classList.add('intro');
-                } catch (e) {}
-            }
         })();
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -45,16 +38,7 @@
 <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="preloader" aria-hidden="true">
-        <div class="preloader__inner">
-            <span class="preloader__name">Jessy Gray</span>
-            <span class="preloader__count"><span data-preloader-count>0</span>%</span>
-        </div>
-        <div class="preloader__bar"><span></span></div>
-    </div>
-
     <div class="scroll-progress" aria-hidden="true"><span></span></div>
-    <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
 
     <header class="site-header">
         <div class="container site-header__inner">
@@ -98,27 +82,38 @@
 
         <section class="hero" aria-labelledby="hero-title">
             <div class="container">
-                <p class="hero__meta" data-hero>Haifa, Israel <span aria-hidden="true">·</span> <span class="status"><span class="status__dot"></span>Open to work</span></p>
-
-                <h1 class="hero__title" id="hero-title">
-                    <span class="line"><span data-hero-line>Jessy Gray</span></span>
-                </h1>
-                <p class="hero__role" data-hero>Aspiring Full Stack Developer</p>
-
-                <div class="hero__bottom" data-hero>
-                    <p class="hero__lead">
-                        I build websites and web apps for real businesses: a restaurant site in Moscow,
-                        a booking platform for a detailing studio and an inventory system for an auto parts
-                        workshop. I study Full Stack Development at Tel-Ran and I am building Orvekta,
-                        an AI tool for restaurant advertising.
-                    </p>
-                    <div class="hero__cta">
-                        <a href="projects.html" class="btn btn--accent" data-magnetic>
-                            <span>See projects</span>
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                        </a>
-                        <button type="button" class="btn btn--ghost" data-print data-magnetic>Download CV</button>
+                <div class="hero__topline" data-hero>
+                    <p class="hero__meta">Developer portfolio / 2026</p>
+                    <p class="hero__meta status"><span class="status__dot"></span>Open to junior roles</p>
+                </div>
+                <div class="hero__layout">
+                    <div class="hero__copy">
+                        <p class="hero__role" data-hero>Jessy Gray / Aspiring Full Stack Developer</p>
+                        <h1 class="hero__title" id="hero-title">
+                            <span class="line"><span data-hero-line>Websites for</span></span>
+                            <span class="line"><span data-hero-line><em>real business.</em></span></span>
+                        </h1>
+                        <p class="hero__lead" data-hero>I build websites and web apps for small businesses, from restaurant menus to workshop inventory. Based in Haifa, studying Full Stack Development at Tel-Ran.</p>
+                        <div class="hero__cta" data-hero>
+                            <a href="#projects" class="btn btn--accent"><span>Explore my work</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
+                            <button type="button" class="btn btn--ghost" data-print>Save CV as PDF</button>
+                        </div>
                     </div>
+                    <div class="hero__visual" data-hero>
+                        <a class="hero__window" href="projects.html?project=noir-gloss" aria-label="View Noir Gloss project">
+                            <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>noir-gloss.vercel.app</span></div>
+                            <img src="assets/img/projects/noir-gloss.jpg" width="1440" height="1000" alt="Noir Gloss detailing studio website" fetchpriority="high">
+                        </a>
+                        <figure class="hero__mini">
+                            <img src="assets/img/projects/workshop-app.jpg" width="1440" height="1000" alt="Hebrew inventory interface for AutoParts Workshop">
+                            <figcaption>AutoParts Workshop / Web app</figcaption>
+                        </figure>
+                        <span class="hero__visual-label" aria-hidden="true">Selected client projects / 01/03</span>
+                    </div>
+                </div>
+                <div class="hero__foot" data-hero>
+                    <a href="#projects">Scroll to explore <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M6 14l6 6 6-6"/></svg></a>
+                    <div class="hero__foot-links"><span>Haifa, Israel</span><a href="https://github.com/JessyGray" target="_blank" rel="noopener">GitHub ↗</a></div>
                 </div>
             </div>
         </section>
@@ -130,9 +125,23 @@
             </div>
         </div>
 
+        <section class="section work" id="projects" aria-labelledby="projects-title">
+            <div class="container">
+                <div class="work__head">
+                    <h2 class="section__title" id="projects-title" data-split>Selected work</h2>
+                    <a href="projects.html" class="link-arrow">
+                        All projects
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </a>
+                </div>
+
+                <div class="project-grid project-grid--featured" data-featured></div>
+            </div>
+        </section>
+
         <section class="section" id="about" aria-labelledby="about-title">
             <div class="container section__grid">
-                <h2 class="section__title" id="about-title" data-split>About</h2>
+                <h2 class="section__title" id="about-title" data-number="02 / A LITTLE BACKGROUND" data-split>Curious by nature.</h2>
 
                 <div class="section__body">
                     <div class="about__text" data-reveal>
@@ -164,7 +173,7 @@
 
         <section class="section" id="experience" aria-labelledby="experience-title">
             <div class="container section__grid">
-                <h2 class="section__title" id="experience-title" data-split>Experience</h2>
+                <h2 class="section__title" id="experience-title" data-number="03 / THE JOURNEY" data-split>Experience</h2>
 
                 <ol class="timeline section__body">
                     <li class="timeline__rail" aria-hidden="true"><span class="timeline__progress"></span></li>
@@ -224,23 +233,11 @@
             </div>
         </section>
 
-        <section class="section work" id="projects" aria-labelledby="projects-title">
-            <div class="container">
-                <div class="work__head">
-                    <h2 class="section__title" id="projects-title" data-split>Projects</h2>
-                    <a href="projects.html" class="link-arrow">
-                        All projects
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                    </a>
-                </div>
 
-                <div class="project-grid project-grid--featured" data-featured></div>
-            </div>
-        </section>
 
         <section class="section" id="skills" aria-labelledby="skills-title">
             <div class="container section__grid">
-                <h2 class="section__title" id="skills-title" data-split>Skills</h2>
+                <h2 class="section__title" id="skills-title" data-number="04 / TOOLS & LANGUAGES" data-split>Skills</h2>
 
                 <div class="section__body skills">
                     <div class="skills__group" data-reveal>
@@ -292,7 +289,7 @@
 
         <section class="section" id="education" aria-labelledby="education-title">
             <div class="container section__grid">
-                <h2 class="section__title" id="education-title" data-split>Education</h2>
+                <h2 class="section__title" id="education-title" data-number="05 / LEARNING" data-split>Education</h2>
 
                 <ul class="rows section__body">
                     <li class="row" data-reveal>
@@ -315,7 +312,7 @@
 
         <section class="section contact" id="contact" aria-labelledby="contact-title">
             <div class="container section__grid">
-                <h2 class="section__title" id="contact-title" data-split>Contact</h2>
+                <h2 class="section__title" id="contact-title" data-number="06 / LET’S TALK" data-split>Let’s build<br>something.</h2>
 
                 <div class="section__body">
                     <p class="contact__lead" data-reveal>
@@ -323,7 +320,7 @@
                     </p>
 
                     <div class="contact__actions" data-reveal>
-                        <a href="mailto:jessy_gray@icloud.com" class="contact__mail" data-magnetic>jessy_gray@icloud.com</a>
+                        <a href="mailto:jessy_gray@icloud.com" class="contact__mail">jessy_gray@icloud.com</a>
                         <button type="button" class="btn btn--ghost btn--small" data-copy="jessy_gray@icloud.com">Copy</button>
                     </div>
 

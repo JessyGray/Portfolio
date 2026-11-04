@@ -16,7 +16,7 @@
 
     function mediaHTML(p) {
         return p.cover
-            ? `<div class="card__media"><img src="${esc(p.cover)}" alt="" loading="lazy" decoding="async"><span class="card__arrow" aria-hidden="true">${arrowIcon}</span></div>`
+            ? `<div class="card__media"><img src="${esc(p.cover)}" alt="Screenshot of ${esc(p.title)}" width="1440" height="1000" loading="lazy" decoding="async"><span class="card__arrow" aria-hidden="true">${arrowIcon}</span></div>`
             : `<div class="card__media card__media--empty">
                     <span class="card__placeholder">${esc(p.title)}</span>
                     <ul class="tags">${(p.tags || []).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
@@ -33,9 +33,12 @@
             <article class="card" data-id="${esc(p.id)}" data-cursor="View">
                 ${mediaHTML(p)}
                 <div class="card__info">
+                    <span class="card__index">${String(projects.indexOf(p) + 1).padStart(2, '0')} / ${esc(p.year)}</span>
                     <h3 class="card__title">${opener}</h3>
                     <span class="card__type">${esc(p.status || p.type || p.year)}</span>
                     <p class="card__summary">${esc(p.summary)}</p>
+                    <ul class="tags">${(p.tags || []).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+                    ${linkMode ? `<span class="card__view" aria-hidden="true">View project ${arrowIcon}</span>` : ''}
                 </div>
             </article>`;
     }
@@ -82,7 +85,7 @@
     function matches(p) {
         if (state.filter !== 'All' && !(p.category || []).includes(state.filter)) return false;
         if (!state.query) return true;
-        return [p.title, p.type, p.summary, p.description, ...(p.tags || [])]
+        return [p.title, p.type, p.summary, p.problem, p.role, ...(p.tags || [])]
             .join(' ')
             .toLowerCase()
             .includes(state.query);
@@ -224,6 +227,7 @@
         lastTrigger = trigger || null;
         fillProject(p);
         modal.showModal();
+        document.body.classList.add('modal-open');
         if (site.lenis) site.lenis.stop();
     }
 
@@ -258,6 +262,7 @@
     });
 
     modal.addEventListener('close', () => {
+        document.body.classList.remove('modal-open');
         if (site.lenis) site.lenis.start();
         const url = new URL(location.href);
         url.searchParams.delete('project');

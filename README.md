@@ -49,7 +49,7 @@ New categories show up in the filter automatically. `featured: true` puts the pr
 
 ## PDF
 
-The "Download CV" button opens the print dialog. Choose "Save as PDF". Navigation, projects and buttons are hidden in print.
+The "Save CV as PDF" button opens the print dialog. Choose "Save as PDF". The print layout includes project summaries and hides navigation, screenshots and interactive controls.
 
 ## Libraries
 

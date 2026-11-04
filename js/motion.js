@@ -1,164 +1,101 @@
 (function () {
     'use strict';
 
-    if (typeof window.gsap === 'undefined') return;
-
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
     const site = window.site || {};
-    const hasST = typeof window.ScrollTrigger !== 'undefined';
-    const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+    const counters = $$('[data-count]');
+    const counterTweens = [];
+    const finishCounters = () => {
+        counterTweens.forEach((tween) => tween.kill());
+        counters.forEach((element) => { element.textContent = element.dataset.count; });
+    };
+    window.addEventListener('beforeprint', finishCounters);
 
-    gsap.registerPlugin(...[window.ScrollTrigger, window.Flip].filter(Boolean));
-
-    if (site.reduceMotion || !hasST) {
-        gsap.set('[data-hero], [data-hero-line]', { autoAlpha: 1 });
-        $$('.langs').forEach((el) => el.classList.add('is-in'));
+    if (typeof window.gsap === 'undefined' || site.reduceMotion) {
+        document.documentElement.classList.remove('motion');
+        $$('.langs').forEach((element) => element.classList.add('is-in'));
+        finishCounters();
         return;
     }
 
-    if (site.lenis) site.lenis.on('scroll', ScrollTrigger.update);
-
-    function splitWords(el) {
-        const walk = (node) => {
-            Array.from(node.childNodes).forEach((child) => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                    const frag = document.createDocumentFragment();
-                    child.textContent.split(/(\s+)/).forEach((part) => {
-                        if (!part) return;
-                        if (/^\s+$/.test(part)) {
-                            frag.appendChild(document.createTextNode(' '));
-                            return;
-                        }
-                        const outer = document.createElement('span');
-                        const inner = document.createElement('span');
-                        outer.className = 'word';
-                        inner.textContent = part;
-                        outer.appendChild(inner);
-                        frag.appendChild(outer);
-                    });
-                    child.replaceWith(frag);
-                } else if (child.nodeType === Node.ELEMENT_NODE) {
-                    walk(child);
-                }
-            });
-        };
-        walk(el);
-        return $$('.word > span', el);
-    }
-
-    /* intro */
+    const hasScrollTrigger = typeof window.ScrollTrigger !== 'undefined';
+    gsap.registerPlugin(...[window.ScrollTrigger, window.Flip].filter(Boolean));
 
     const heroLines = $$('[data-hero-line]');
-    const heroBits = $$('[data-hero]');
+    const heroDetails = $$('[data-hero]');
+    const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    if (heroLines.length) heroTimeline.fromTo(heroLines,
+        { yPercent: 108, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1.05, stagger: 0.1, clearProps: 'transform,opacity,visibility' });
+    if (heroDetails.length) heroTimeline.fromTo(heroDetails,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.75, stagger: 0.075, clearProps: 'transform,opacity,visibility' }, 0.2);
 
-    gsap.set(heroLines, { yPercent: 115, autoAlpha: 1 });
-    gsap.set(heroBits, { y: 24, autoAlpha: 0 });
-
-    Promise.resolve(site.ready).then(() => {
-        gsap.timeline({ defaults: { ease: 'expo.out' } })
-            .to(heroLines, { yPercent: 0, duration: 1.3, stagger: 0.12 })
-            .to(heroBits, { y: 0, autoAlpha: 1, duration: 1, stagger: 0.08, clearProps: 'transform' }, 0.3);
-    });
-
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        gsap.to('.hero__title', {
-            yPercent: -25,
-            ease: 'none',
-            scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true }
-        });
+    if (!hasScrollTrigger) {
+        document.documentElement.classList.remove('motion');
+        finishCounters();
+        return;
     }
+    site.lenis?.on('scroll', ScrollTrigger.update);
 
-    /* headings */
-
-    $$('[data-split]').forEach((el) => {
-        gsap.from(splitWords(el), {
-            yPercent: 110,
-            duration: 1,
-            stagger: 0.05,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-        });
-    });
-
-    /* reveal on scroll */
-
-    const reveal = (targets, distance) => {
-        if (!targets.length) return;
-        gsap.set(targets, { autoAlpha: 0, y: distance });
-        ScrollTrigger.batch(targets, {
-            start: 'top 90%',
-            once: true,
-            onEnter: (batch) => gsap.to(batch, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 1,
-                stagger: 0.1,
-                ease: 'expo.out',
-                overwrite: true
-            })
-        });
-    };
-
-    reveal($$('[data-reveal]'), 40);
-    reveal($$('.card').filter((c) => c.style.display !== 'none'), 60);
-
-    /* numbers */
-
-    const counters = $$('[data-count]');
-    counters.forEach((el) => (el.textContent = '0'));
-
-    // wait for the intro, otherwise the numbers finish counting behind it
-    Promise.resolve(site.ready).then(() => {
-        counters.forEach((el) => {
-            const obj = { v: 0 };
-            gsap.to(obj, {
-                v: Number(el.dataset.count),
-                duration: 2,
-                delay: 0.2,
-                ease: 'power2.out',
-                onUpdate: () => (el.textContent = Math.round(obj.v)),
-                scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+    const reveal = (elements, distance) => {
+        elements.forEach((element) => {
+            ScrollTrigger.create({
+                trigger: element,
+                start: 'top 94%',
+                once: true,
+                onEnter: () => gsap.fromTo(element,
+                    { y: distance, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', clearProps: 'transform,opacity,visibility' })
             });
         });
-    });
+    };
+    reveal($$('[data-reveal]'), 28);
+    reveal($$('[data-split]'), 18);
+    reveal($$('.card').filter((card) => card.style.display !== 'none'), 34);
 
-    /* timeline and language bars */
-
-    const progress = document.querySelector('.timeline__progress');
-    if (progress) {
-        gsap.to(progress, {
-            scaleY: 1,
-            ease: 'none',
-            scrollTrigger: { trigger: '.timeline', start: 'top 70%', end: 'bottom 60%', scrub: 0.6 }
-        });
-    }
-
-    $$('.langs').forEach((el) => {
+    counters.forEach((element) => {
+        const end = Number(element.dataset.count);
+        if (!Number.isFinite(end)) return;
         ScrollTrigger.create({
-            trigger: el,
-            start: 'top 85%',
+            trigger: element,
+            start: 'top 95%',
             once: true,
-            onEnter: () => el.classList.add('is-in')
-        });
-    });
-
-    /* marquee leans with scroll speed */
-
-    const marquee = document.querySelector('.marquee');
-    if (marquee) {
-        const skewTo = gsap.quickTo(marquee, 'skewX', { duration: 0.5, ease: 'power3.out' });
-        let resetTimer;
-        ScrollTrigger.create({
-            onUpdate: (self) => {
-                skewTo(gsap.utils.clamp(-8, 8, self.getVelocity() / -250));
-                clearTimeout(resetTimer);
-                resetTimer = setTimeout(() => skewTo(0), 120);
+            onEnter: () => {
+                if (end > 100) return;
+                const value = { current: 0 };
+                counterTweens.push(gsap.to(value, {
+                    current: end,
+                    duration: 1.25,
+                    ease: 'power2.out',
+                    onUpdate: () => { element.textContent = Math.round(value.current); },
+                    onComplete: () => { element.textContent = element.dataset.count; }
+                }));
             }
         });
+    });
+
+    const timelineProgress = document.querySelector('.timeline__progress');
+    if (timelineProgress) {
+        gsap.fromTo(timelineProgress, { scaleY: 0 }, {
+            scaleY: 1,
+            ease: 'none',
+            scrollTrigger: { trigger: '.timeline', start: 'top 70%', end: 'bottom 70%', scrub: 0.5 }
+        });
     }
 
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => ScrollTrigger.refresh());
-    }
-    window.addEventListener('load', () => ScrollTrigger.refresh());
+    $$('.langs').forEach((element) => ScrollTrigger.create({
+        trigger: element,
+        start: 'top 95%',
+        once: true,
+        onEnter: () => element.classList.add('is-in')
+    }));
+
+    window.addEventListener('beforeprint', () => {
+        heroTimeline.progress(1);
+        gsap.killTweensOf('[data-reveal], [data-split], .card');
+        gsap.set('[data-reveal], [data-split], .card', { clearProps: 'transform,opacity,visibility' });
+    });
+    document.fonts?.ready.then(() => ScrollTrigger.refresh());
+    window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
 })();
